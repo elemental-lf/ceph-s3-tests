@@ -16,7 +16,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 COPY \
     bootstrap \
     requirements.txt \
-    run-docker.sh \
     s3tests \
     setup.py \
     /opt/s3-tests/
@@ -26,6 +25,8 @@ RUN ./bootstrap
 
 ENV \
     NOSETESTS_ATTR="" \
+    NOSETESTS_OPTIONS="" \
     S3TEST_CONF="/s3test.conf"
 
-ENTRYPOINT ["/opt/s3-tests/run-docker.sh"]
+ENTRYPOINT ["/bin/bash", "-c"]
+CMD ["exec ./virtualenv/bin/nosetests ${NOSETESTS_OPTIONS-} ${NOSETESTS_ATTR:+-a $NOSETESTS_ATTR}"]
